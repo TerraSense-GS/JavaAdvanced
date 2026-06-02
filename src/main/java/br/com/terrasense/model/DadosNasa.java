@@ -72,14 +72,14 @@ public class DadosNasa {
             description = "Umidade relativa estimada via satélite",
             example = "68.50"
     )
-    private BigDecimal umidadeSat;
+    private double umidadeSat;
 
     @Column(name = "NUM_PRECIP_SAT", precision = 6, scale = 2)
     @Schema(
             description = "Precipitação estimada pelo satélite",
             example = "12.30"
     )
-    private BigDecimal precipSat;
+    private double precipSat;
 
     @Column(name = "DT_COLETA")
     @Schema(
