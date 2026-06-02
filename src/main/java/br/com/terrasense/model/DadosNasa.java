@@ -42,7 +42,7 @@ public class DadosNasa {
     )
     private LocalDate dataReferencia;
 
-    @Column(name = "NUM_RADIACAO", precision = 8, scale = 2)
+    @Column(name = "NUM_RADIACAO")
     @Schema(
             description = "Radiação solar incidente",
             example = "24.50"
@@ -51,14 +51,14 @@ public class DadosNasa {
 
     @DecimalMin("-1.0")
     @DecimalMax("1.0")
-    @Column(name = "NUM_NDVI", precision = 5, scale = 4)
+    @Column(name = "NUM_NDVI")
     @Schema(
             description = "Índice NDVI de vegetação",
             example = "0.7425"
     )
     private double ndvi;
 
-    @Column(name = "NUM_TEMP_SAT", precision = 5, scale = 2)
+    @Column(name = "NUM_TEMP_SAT")
     @Schema(
             description = "Temperatura da superfície via satélite",
             example = "31.80"
@@ -67,14 +67,14 @@ public class DadosNasa {
 
     @DecimalMin("0.0")
     @DecimalMax("100.0")
-    @Column(name = "NUM_UMIDADE_SAT", precision = 5, scale = 2)
+    @Column(name = "NUM_UMIDADE_SAT")
     @Schema(
             description = "Umidade relativa estimada via satélite",
             example = "68.50"
     )
     private double umidadeSat;
 
-    @Column(name = "NUM_PRECIP_SAT", precision = 6, scale = 2)
+    @Column(name = "NUM_PRECIP_SAT")
     @Schema(
             description = "Precipitação estimada pelo satélite",
             example = "12.30"

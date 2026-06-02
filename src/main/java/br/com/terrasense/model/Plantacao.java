@@ -56,7 +56,7 @@ public class Plantacao {
 
     @NotNull
     @Positive
-    @Column(name = "NUM_AREA_HA", nullable = false, precision = 8, scale = 2)
+    @Column(name = "NUM_AREA_HA")
     @Schema(
             description = "Área da plantação em hectares",
             example = "50.75"

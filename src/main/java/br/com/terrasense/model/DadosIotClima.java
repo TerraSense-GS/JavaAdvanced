@@ -36,7 +36,7 @@ public class DadosIotClima {
     )
     private Long idDadoIot;
 
-    @Column(name = "NUM_TEMPERATURA", precision = 5, scale = 2)
+    @Column(name = "NUM_TEMPERATURA")
     @Schema(
             description = "Temperatura do ar medida pelo sensor",
             example = "29.50"
@@ -45,7 +45,7 @@ public class DadosIotClima {
 
     @DecimalMin("0.0")
     @DecimalMax("100.0")
-    @Column(name = "NUM_UMIDADE", precision = 5, scale = 2)
+    @Column(name = "NUM_UMIDADE")
     @Schema(
             description = "Umidade relativa do ar",
             example = "72.30"
@@ -53,7 +53,7 @@ public class DadosIotClima {
     private double umidade;
 
     @PositiveOrZero
-    @Column(name = "NUM_CHUVA", precision = 6, scale = 2)
+    @Column(name = "NUM_CHUVA")
     @Schema(
             description = "Volume de chuva registrado",
             example = "8.20"
@@ -61,7 +61,7 @@ public class DadosIotClima {
     private double chuva;
 
     @PositiveOrZero
-    @Column(name = "NUM_VENTO_KMH", precision = 6, scale = 2)
+    @Column(name = "NUM_VENTO_KMH")
     @Schema(
             description = "Velocidade do vento em km/h",
             example = "14.60"
