@@ -56,7 +56,7 @@ public class Propriedade {
     private Endereco endereco;
 
     @Positive
-    @Column(name = "NUM_AREA_TOTAL", precision = 10, scale = 2)
+    @Column(name = "NUM_AREA_TOTAL")
     @Schema(
             description = "Área total da propriedade em hectares",
             example = "150.50"
