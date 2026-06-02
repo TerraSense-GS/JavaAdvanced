@@ -7,9 +7,10 @@ import br.com.terrasense.exception.ResourceNotFoundException;
 import br.com.terrasense.model.Usuario;
 import br.com.terrasense.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,28 +18,26 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public List<UsuarioResponseDTO> listarTodos() {
-        return usuarioRepository.findAll()
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
+    @Transactional(readOnly = true)
+    public Page<UsuarioResponseDTO> listar(Pageable pageable) {
+        return usuarioRepository.findAll(pageable)
+                .map(this::toResponseDTO);
     }
 
+    @Transactional(readOnly = true)
     public UsuarioResponseDTO buscarPorId(Long id) {
-
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Usuário não encontrado com ID: " + id));
+                        new ResourceNotFoundException("Usuário não encontrado com ID: " + id)
+                );
 
         return toResponseDTO(usuario);
     }
 
+    @Transactional
     public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dto) {
-
         if (usuarioRepository.existsByEmail(dto.email())) {
-            throw new DuplicateResourceException(
-                    "Já existe um usuário cadastrado com este e-mail.");
+            throw new DuplicateResourceException("Já existe um usuário cadastrado com este e-mail.");
         }
 
         Usuario usuario = new Usuario();
@@ -49,46 +48,44 @@ public class UsuarioService {
         usuario.setSenha(dto.senha());
         usuario.setPerfilCargo(dto.perfilCargo());
 
-        usuario = usuarioRepository.save(usuario);
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
 
-        return toResponseDTO(usuario);
+        return toResponseDTO(usuarioSalvo);
     }
 
+    @Transactional
     public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
-
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Usuário não encontrado com ID: " + id));
+                        new ResourceNotFoundException("Usuário não encontrado com ID: " + id)
+                );
 
         if (usuarioRepository.existsByEmailAndIdUsuarioNot(dto.email(), id)) {
-            throw new DuplicateResourceException(
-                    "Já existe um usuário cadastrado com este e-mail."
-            );
+            throw new DuplicateResourceException("Já existe um usuário cadastrado com este e-mail.");
         }
+
         usuario.setNomeCompleto(dto.nomeCompleto());
         usuario.setTelefone(dto.telefone());
         usuario.setEmail(dto.email());
         usuario.setSenha(dto.senha());
         usuario.setPerfilCargo(dto.perfilCargo());
 
-        usuario = usuarioRepository.save(usuario);
+        Usuario usuarioAtualizado = usuarioRepository.save(usuario);
 
-        return toResponseDTO(usuario);
+        return toResponseDTO(usuarioAtualizado);
     }
 
+    @Transactional
     public void deletar(Long id) {
-
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Usuário não encontrado com ID: " + id));
+                        new ResourceNotFoundException("Usuário não encontrado com ID: " + id)
+                );
 
         usuarioRepository.delete(usuario);
     }
 
     private UsuarioResponseDTO toResponseDTO(Usuario usuario) {
-
         return new UsuarioResponseDTO(
                 usuario.getIdUsuario(),
                 usuario.getNomeCompleto(),

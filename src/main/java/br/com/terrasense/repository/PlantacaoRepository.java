@@ -1,15 +1,15 @@
 package br.com.terrasense.repository;
 
 import br.com.terrasense.model.Plantacao;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
 
 public interface PlantacaoRepository extends JpaRepository<Plantacao, Long> {
 
-    List<Plantacao> findByPropriedadeIdPropriedade(Long idPropriedade);
+    Page<Plantacao> findByPropriedadeIdPropriedade(Long idPropriedade, Pageable pageable);
 
-    List<Plantacao> findByStatusPlantacaoIgnoreCase(String statusPlantacao);
+    Page<Plantacao> findByStatusPlantacaoIgnoreCase(String statusPlantacao, Pageable pageable);
 
-    List<Plantacao> findByTipoPlantacaoContainingIgnoreCase(String tipoPlantacao);
-
+    Page<Plantacao> findByTipoPlantacaoContainingIgnoreCase(String tipoPlantacao, Pageable pageable);
 }

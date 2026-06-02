@@ -8,9 +8,10 @@ import br.com.terrasense.model.Plantacao;
 import br.com.terrasense.repository.DadosNasaRepository;
 import br.com.terrasense.repository.PlantacaoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,31 +20,39 @@ public class DadosNasaService {
     private final DadosNasaRepository dadosNasaRepository;
     private final PlantacaoRepository plantacaoRepository;
 
-    public List<DadosNasaResponseDTO> listarTodos() {
-        return dadosNasaRepository.findAll()
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
+    @Transactional(readOnly = true)
+    public Page<DadosNasaResponseDTO> listar(Pageable pageable) {
+        return dadosNasaRepository.findAll(pageable)
+                .map(this::toResponseDTO);
     }
 
+    @Transactional(readOnly = true)
     public DadosNasaResponseDTO buscarPorId(Long id) {
-
         DadosNasa dadosNasa = dadosNasaRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Dados NASA não encontrados com ID: " + id));
+                        new ResourceNotFoundException("Dados NASA não encontrados com ID: " + id)
+                );
 
         return toResponseDTO(dadosNasa);
     }
 
-    public DadosNasaResponseDTO cadastrar(DadosNasaRequestDTO dto) {
+    @Transactional(readOnly = true)
+    public Page<DadosNasaResponseDTO> buscarPorPlantacao(
+            Long idPlantacao,
+            Pageable pageable
+    ) {
+        return dadosNasaRepository
+                .findByPlantacaoIdPlantacao(idPlantacao, pageable)
+                .map(this::toResponseDTO);
+    }
 
+    @Transactional
+    public DadosNasaResponseDTO cadastrar(DadosNasaRequestDTO dto) {
         Plantacao plantacao = plantacaoRepository
                 .findById(dto.idPlantacao())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Plantação não encontrada com ID: "
-                                        + dto.idPlantacao()));
+                        new ResourceNotFoundException("Plantação não encontrada com ID: " + dto.idPlantacao())
+                );
 
         DadosNasa dadosNasa = new DadosNasa();
 
@@ -56,24 +65,26 @@ public class DadosNasaService {
         dadosNasa.setDataColeta(dto.dataColeta());
         dadosNasa.setPlantacao(plantacao);
 
-        dadosNasa = dadosNasaRepository.save(dadosNasa);
+        DadosNasa dadosNasaSalvo = dadosNasaRepository.save(dadosNasa);
 
-        return toResponseDTO(dadosNasa);
+        return toResponseDTO(dadosNasaSalvo);
     }
 
-    public DadosNasaResponseDTO atualizar(Long id, DadosNasaRequestDTO dto) {
-
+    @Transactional
+    public DadosNasaResponseDTO atualizar(
+            Long id,
+            DadosNasaRequestDTO dto
+    ) {
         DadosNasa dadosNasa = dadosNasaRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Dados NASA não encontrados com ID: " + id));
+                        new ResourceNotFoundException("Dados NASA não encontrados com ID: " + id)
+                );
 
         Plantacao plantacao = plantacaoRepository
                 .findById(dto.idPlantacao())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Plantação não encontrada com ID: "
-                                        + dto.idPlantacao()));
+                        new ResourceNotFoundException("Plantação não encontrada com ID: " + dto.idPlantacao())
+                );
 
         dadosNasa.setDataReferencia(dto.dataReferencia());
         dadosNasa.setRadiacaoSolar(dto.radiacaoSolar());
@@ -84,23 +95,22 @@ public class DadosNasaService {
         dadosNasa.setDataColeta(dto.dataColeta());
         dadosNasa.setPlantacao(plantacao);
 
-        dadosNasa = dadosNasaRepository.save(dadosNasa);
+        DadosNasa dadosNasaAtualizado = dadosNasaRepository.save(dadosNasa);
 
-        return toResponseDTO(dadosNasa);
+        return toResponseDTO(dadosNasaAtualizado);
     }
 
+    @Transactional
     public void deletar(Long id) {
-
         DadosNasa dadosNasa = dadosNasaRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Dados NASA não encontrados com ID: " + id));
+                        new ResourceNotFoundException("Dados NASA não encontrados com ID: " + id)
+                );
 
         dadosNasaRepository.delete(dadosNasa);
     }
 
     private DadosNasaResponseDTO toResponseDTO(DadosNasa dadosNasa) {
-
         return new DadosNasaResponseDTO(
                 dadosNasa.getIdDadoNasa(),
                 dadosNasa.getDataReferencia(),

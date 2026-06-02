@@ -10,9 +10,10 @@ import br.com.terrasense.model.Usuario;
 import br.com.terrasense.repository.PropriedadeRepository;
 import br.com.terrasense.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,30 +22,47 @@ public class PropriedadeService {
     private final PropriedadeRepository propriedadeRepository;
     private final UsuarioRepository usuarioRepository;
 
-    public List<PropriedadeResponseDTO> listarTodos() {
-        return propriedadeRepository.findAll()
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
+    @Transactional(readOnly = true)
+    public Page<PropriedadeResponseDTO> listar(Pageable pageable) {
+        return propriedadeRepository.findAll(pageable)
+                .map(this::toResponseDTO);
     }
 
+    @Transactional(readOnly = true)
     public PropriedadeResponseDTO buscarPorId(Long id) {
-
         Propriedade propriedade = propriedadeRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Propriedade não encontrada com ID: " + id));
+                        new ResourceNotFoundException("Propriedade não encontrada com ID: " + id)
+                );
 
         return toResponseDTO(propriedade);
     }
 
-    public PropriedadeResponseDTO cadastrar(PropriedadeRequestDTO dto) {
+    @Transactional(readOnly = true)
+    public Page<PropriedadeResponseDTO> buscarPorUsuario(
+            Long idUsuario,
+            Pageable pageable
+    ) {
+        return propriedadeRepository.findByUsuarioIdUsuario(idUsuario, pageable)
+                .map(this::toResponseDTO);
+    }
 
+    @Transactional(readOnly = true)
+    public Page<PropriedadeResponseDTO> buscarPorTipo(
+            String tipoPropriedade,
+            Pageable pageable
+    ) {
+        return propriedadeRepository
+                .findByTipoPropriedadeContainingIgnoreCase(tipoPropriedade, pageable)
+                .map(this::toResponseDTO);
+    }
+
+    @Transactional
+    public PropriedadeResponseDTO cadastrar(PropriedadeRequestDTO dto) {
         Usuario usuario = usuarioRepository.findById(dto.idUsuario())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Usuário não encontrado com ID: "
-                                        + dto.idUsuario()));
+                        new ResourceNotFoundException("Usuário não encontrado com ID: " + dto.idUsuario())
+                );
 
         Propriedade propriedade = new Propriedade();
 
@@ -54,23 +72,24 @@ public class PropriedadeService {
         propriedade.setEndereco(toEndereco(dto.endereco()));
         propriedade.setUsuario(usuario);
 
-        propriedade = propriedadeRepository.save(propriedade);
-
-        return toResponseDTO(propriedade);
+        Propriedade propriedadeSalva = propriedadeRepository.save(propriedade);
+        return toResponseDTO(propriedadeSalva);
     }
 
-    public PropriedadeResponseDTO atualizar(Long id, PropriedadeRequestDTO dto) {
-
+    @Transactional
+    public PropriedadeResponseDTO atualizar(
+            Long id,
+            PropriedadeRequestDTO dto
+    ) {
         Propriedade propriedade = propriedadeRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Propriedade não encontrada com ID: " + id));
+                        new ResourceNotFoundException("Propriedade não encontrada com ID: " + id)
+                );
 
         Usuario usuario = usuarioRepository.findById(dto.idUsuario())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Usuário não encontrado com ID: "
-                                        + dto.idUsuario()));
+                        new ResourceNotFoundException("Usuário não encontrado com ID: " + dto.idUsuario())
+                );
 
         propriedade.setNomePropriedade(dto.nomePropriedade());
         propriedade.setTipoPropriedade(dto.tipoPropriedade());
@@ -78,29 +97,27 @@ public class PropriedadeService {
         propriedade.setEndereco(toEndereco(dto.endereco()));
         propriedade.setUsuario(usuario);
 
-        propriedade = propriedadeRepository.save(propriedade);
+        Propriedade propriedadeAtualizada = propriedadeRepository.save(propriedade);
 
-        return toResponseDTO(propriedade);
+        return toResponseDTO(propriedadeAtualizada);
     }
 
+    @Transactional
     public void deletar(Long id) {
-
         Propriedade propriedade = propriedadeRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Propriedade não encontrada com ID: " + id));
+                        new ResourceNotFoundException("Propriedade não encontrada com ID: " + id)
+                );
 
         propriedadeRepository.delete(propriedade);
     }
 
     private PropriedadeResponseDTO toResponseDTO(Propriedade propriedade) {
-
         EnderecoDTO enderecoDTO = new EnderecoDTO(
                 propriedade.getEndereco().getCidade(),
                 propriedade.getEndereco().getEstado(),
                 propriedade.getEndereco().getCep()
         );
-
         return new PropriedadeResponseDTO(
                 propriedade.getIdPropriedade(),
                 propriedade.getNomePropriedade(),

@@ -8,9 +8,10 @@ import br.com.terrasense.model.Plantacao;
 import br.com.terrasense.repository.AlertaRepository;
 import br.com.terrasense.repository.PlantacaoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,32 +20,60 @@ public class AlertaService {
     private final AlertaRepository alertaRepository;
     private final PlantacaoRepository plantacaoRepository;
 
-    public List<AlertaResponseDTO> listarTodos() {
-        return alertaRepository.findAll()
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
+    @Transactional(readOnly = true)
+    public Page<AlertaResponseDTO> listar(Pageable pageable) {
+        return alertaRepository.findAll(pageable)
+                .map(this::toResponseDTO);
     }
 
+    @Transactional(readOnly = true)
     public AlertaResponseDTO buscarPorId(Long id) {
-
         Alerta alerta = alertaRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Alerta não encontrado com ID: " + id));
+                        new ResourceNotFoundException("Alerta não encontrado com ID: " + id)
+                );
 
         return toResponseDTO(alerta);
     }
 
-    public AlertaResponseDTO cadastrar(
-            AlertaRequestDTO dto
+    @Transactional(readOnly = true)
+    public Page<AlertaResponseDTO> buscarPorPlantacao(
+            Long idPlantacao,
+            Pageable pageable
     ) {
+        return alertaRepository
+                .findByPlantacaoIdPlantacao(idPlantacao, pageable)
+                .map(this::toResponseDTO);
+    }
 
-        Plantacao plantacao = plantacaoRepository.findById(dto.idPlantacao())
+    @Transactional(readOnly = true)
+    public Page<AlertaResponseDTO> buscarPorStatus(
+            String statusAlerta,
+            Pageable pageable
+    ) {
+        return alertaRepository
+                .findByStatusAlertaIgnoreCase(statusAlerta, pageable)
+                .map(this::toResponseDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AlertaResponseDTO> buscarPorNivel(
+            String nivelAlerta,
+            Pageable pageable
+    ) {
+        return alertaRepository
+                .findByNivelAlertaIgnoreCase(nivelAlerta, pageable)
+                .map(this::toResponseDTO);
+    }
+
+    @Transactional
+    public AlertaResponseDTO cadastrar(AlertaRequestDTO dto) {
+        Plantacao plantacao = plantacaoRepository
+                .findById(dto.idPlantacao())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Plantação não encontrada com ID: "
-                                        + dto.idPlantacao()));
+                        new ResourceNotFoundException("Plantação não encontrada com ID: "+ dto.idPlantacao()
+                        )
+                );
 
         Alerta alerta = new Alerta();
 
@@ -55,26 +84,28 @@ public class AlertaService {
         alerta.setDataAlerta(dto.dataAlerta());
         alerta.setPlantacao(plantacao);
 
-        alerta = alertaRepository.save(alerta);
+        Alerta alertaSalvo = alertaRepository.save(alerta);
 
-        return toResponseDTO(alerta);
+        return toResponseDTO(alertaSalvo);
     }
 
+    @Transactional
     public AlertaResponseDTO atualizar(
             Long id,
             AlertaRequestDTO dto
     ) {
-
         Alerta alerta = alertaRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Alerta não encontrado com ID: " + id));
-
-        Plantacao plantacao = plantacaoRepository.findById(dto.idPlantacao())
+                        new ResourceNotFoundException("Alerta não encontrado com ID: " + id)
+                );
+        Plantacao plantacao = plantacaoRepository
+                .findById(dto.idPlantacao())
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Plantação não encontrada com ID: "
-                                        + dto.idPlantacao()));
+                                        + dto.idPlantacao()
+                        )
+                );
 
         alerta.setTipoAlerta(dto.tipoAlerta());
         alerta.setMensagem(dto.mensagem());
@@ -83,25 +114,22 @@ public class AlertaService {
         alerta.setDataAlerta(dto.dataAlerta());
         alerta.setPlantacao(plantacao);
 
-        alerta = alertaRepository.save(alerta);
+        Alerta alertaAtualizado = alertaRepository.save(alerta);
 
-        return toResponseDTO(alerta);
+        return toResponseDTO(alertaAtualizado);
     }
 
+    @Transactional
     public void deletar(Long id) {
-
         Alerta alerta = alertaRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Alerta não encontrado com ID: " + id));
+                        new ResourceNotFoundException("Alerta não encontrado com ID: " + id)
+                );
 
         alertaRepository.delete(alerta);
     }
 
-    private AlertaResponseDTO toResponseDTO(
-            Alerta alerta
-    ) {
-
+    private AlertaResponseDTO toResponseDTO(Alerta alerta) {
         return new AlertaResponseDTO(
                 alerta.getIdAlerta(),
                 alerta.getTipoAlerta(),

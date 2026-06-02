@@ -1,15 +1,15 @@
 package br.com.terrasense.repository;
 
 import br.com.terrasense.model.Alerta;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
 
 public interface AlertaRepository extends JpaRepository<Alerta, Long> {
 
-    List<Alerta> findByPlantacaoIdPlantacao(Long idPlantacao);
+    Page<Alerta> findByPlantacaoIdPlantacao(Long idPlantacao, Pageable pageable);
 
-    List<Alerta> findByStatusAlertaIgnoreCase(String statusAlerta);
+    Page<Alerta> findByStatusAlertaIgnoreCase(String statusAlerta, Pageable pageable);
 
-    List<Alerta> findByNivelAlertaIgnoreCase(String nivelAlerta);
-
+    Page<Alerta> findByNivelAlertaIgnoreCase(String nivelAlerta, Pageable pageable);
 }
