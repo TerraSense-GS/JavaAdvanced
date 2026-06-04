@@ -1,72 +1,90 @@
-#  TerraSense API
+# TerraSense API
 
-A API TerraSense atua como camada de comunicação entre o aplicativo mobile do projeto e o banco de dados Oracle, 
-permitindo que todas as informações cadastradas no sistema sejam acessadas, 
-atualizadas e gerenciadas.
+A API TerraSense atua como camada de comunicação entre a plataforma de monitoramento agrícola inteligente e o banco de dados Oracle, permitindo o gerenciamento centralizado das informações relacionadas a usuários, propriedades rurais, plantações, dados climáticos coletados por sensores IoT, dados de satélite da NASA e alertas agrícolas.
 
-Através da API, o aplicativo mobile consegue realizar operações de cadastro, 
-consulta, atualização e remoção de dados relacionados a pets, responsáveis e veterinários, 
-garantindo integração entre o front-end mobile e a base de dados da aplicação.
+Por meio da API, é possível cadastrar, consultar, atualizar e remover informações do sistema, permitindo que aplicações web, mobile ou outros serviços consumam os dados de forma padronizada.
 
-A utilização da API no projeto estão a 
-centralização das regras de negócio da aplicação, permitindo que todas as 
-operações e validações sejam realizadas de forma padronizada.
+A utilização da API centraliza as regras de negócio da solução, garante a integridade dos dados, facilita a manutenção do sistema e possibilita a integração entre diferentes componentes da plataforma TerraSense.
+
+---
+
+# Links do Projeto
+
+* **Deploy:** https://terrasense-csjw.onrender.com
+* **Swagger:** https://terrasense-csjw.onrender.com/swagger-ui.html
+* **Vídeo de Apresentação:** placeholder
+* **Repositório GitHub:** placeholder
 
 ---
 
 # Integrantes
 
-| Nome | RM | Turma |
-|---|---|---|       
-|Agatha Yie Won Yun|RM561507|2TDSA| 
-|Ana Claudia Fernandes Martins| RM561190| 2TDSR|   
-|Samantha Faruolo Galdi| RM554794| 2TDSA|
-|Vitor Fria Dalmagro| RM566052| 2TDSA|
-
-
+| Nome                          | RM       | Turma |
+| ----------------------------- | -------- | ----- |
+| Agatha Yie Won Yun            | RM561507 | 2TDSA |
+| Ana Claudia Fernandes Martins | RM561190 | 2TDSR |
+| Andre Rosa Colombo            | RM563112 | 2TDSA |
+| Samantha Faruolo Galdi        | RM554794 | 2TDSA |
+| Vitor Fria Dalmagro           | RM566052 | 2TDSA |
 
 ---
 
 # Tecnologias Utilizadas
 
-- Java 21
-- Spring Boot 4.0.6
-- Spring Data JPA
-- Hibernate
-- Oracle Database
-- Maven
-- Swagger
-- Lombok
-- Bean Validation
+* Java 21
+* Spring Boot 4.0.6
+* Spring Data JPA
+* Hibernate
+* Oracle Database
+* Maven
+* Swagger
+* Spring HATEOAS
+* Lombok
+* Bean Validation
+* Render
 
 ---
 
 # Arquitetura do Projeto
 
-## Explicando cada Camada
+## Explicação das Camadas
 
 ### Controller
-Responsável pelos endpoints da aplicação.
+
+Responsável por disponibilizar os endpoints da aplicação, recebendo requisições HTTP e retornando respostas adequadas aos clientes da API.
 
 ### Service
-Responsável pelas regras de negócio da aplicação.
+
+Responsável pela implementação das regras de negócio, validações e processamento dos dados.
 
 ### Repository
+
 Responsável pela comunicação com o banco de dados utilizando Spring Data JPA.
 
 ### DTO
-Responsável pela transferência de dados entre cliente e servidor.
+
+Responsável pela transferência de dados entre cliente e servidor, evitando exposição direta das entidades.
+
+### Model
+
+Responsável pelo mapeamento das entidades do banco de dados através do JPA.
 
 ### Exception
-Responsável pelo tratamento de exceções da aplicação.
+
+Responsável pelo tratamento global e padronizado de exceções da aplicação.
+
+### Config
+
+Responsável pelas configurações gerais da aplicação, incluindo recursos do Spring HATEOAS.
 
 ---
 
-#  Estrutura do Projeto
+# Estrutura do Projeto
 
 ```txt
-src/main/java/br/com/chupinvet/chupinvet
+src/main/java/br/com/terrasense
 │
+├── config
 ├── controller
 ├── dto
 ├── exception
@@ -79,168 +97,186 @@ src/main/java/br/com/chupinvet/chupinvet
 
 # Banco de Dados
 
-O projeto utiliza Oracle Database.
+O projeto utiliza o Oracle Database como banco de dados relacional principal.
 
-## Principais entidades
+## Principais Entidades
 
-- Usuario
-- Responsavel
-- Veterinario
-- Pet
+* Usuario
+* Propriedade
+* Plantacao
+* DadosNasa
+* DadosIotClima
+* Alerta
 
 ## Relacionamentos
 
-- Um responsável pode possuir vários pets
-- Um pet pertence a um responsável
-- Responsável e Veterinário herdam de Usuario
+* Um usuário pode possuir várias propriedades.
+* Uma propriedade pode possuir várias plantações.
+* Uma plantação pode possuir vários registros de dados da NASA.
+* Uma plantação pode possuir vários registros de dados climáticos provenientes de sensores IoT.
+* Uma plantação pode possuir vários alertas agrícolas.
 
----
+## Modelagem Avançada
 
-#  Funcionalidades Implementadas
-
-- CRUD completo de Pets  
-- CRUD completo de Responsáveis  
-- CRUD completo de Veterinários  
-- Paginação de resultados  
-- Ordenação  
-- Busca por parâmetros  
-- Bean Validation  
-- Tratamento de exceções  
-- Swagger/OpenAPI  
-- Relacionamentos JPA  
-- Herança com JOINED
+* Relacionamentos JPA (`@OneToMany` e `@ManyToOne`)
+* Objetos utilizando `@Embedded`
+* Classes reutilizáveis utilizando `@Embeddable`
+* Estrutura composta por múltiplas tabelas relacionadas
 
 ---
 
 # Como Executar o Projeto
 
-## 1️ Clonar o repositório
+## Clonar o Repositório
 
 ```bash
-git clone https://github.com/ChupinVet/JavaChallenge.git
+git clone placeholder
 ```
 
----
-
-## 2️ Entrar na pasta do projeto
+## Acessar a Pasta do Projeto
 
 ```bash
-cd JavaChallenge
+cd placeholder
 ```
 
-
----
-
-## 3 Executar o projeto
+## Executar a Aplicação
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-ou:
+ou
 
 ```bash
 mvn spring-boot:run
 ```
 
 ---
-# URL Base!
-```txt
-https://javachallenge.onrender.com
-```
----
-#  Swagger
 
-Após iniciar a aplicação:
+# Deploy
+
+## URL Base
+
+```txt
+https://terrasense-csjw.onrender.com
+```
+
+---
+
+# Swagger
 
 ## Swagger UI
 
 ```txt
-https://javachallenge.onrender.com/swagger-ui.html
+https://terrasense-csjw.onrender.com/swagger-ui.html
 ```
 
 ---
 
 # Endpoints da API
 
+## Usuários
 
-## Responsáveis
-
-| Método | Endpoint                                             | Descrição                       |
-|---|------------------------------------------------------|---------------------------------|
-| POST | `/responsaveis`                                      | Cadastra um novo responsável    |
-| GET | `/responsaveis`                                      | Lista todos os responsáveis     |
-| GET | `/responsaveis/{id}`                                 | Busca responsável por ID        |
-| GET | `/responsaveis?page=0&size=10&sort=nomeUsuario,asc ` | Busca responsável com paginação |
-| PUT | `/responsaveis/{id}`                                 | Atualiza um responsável         |
-| DELETE | `/responsaveis/{id}`                                 | Remove um responsável           |
+| Método | Endpoint         |
+| ------ | ---------------- |
+| POST   | `/usuarios`      |
+| GET    | `/usuarios`      |
+| GET    | `/usuarios/{id}` |
+| PUT    | `/usuarios/{id}` |
+| DELETE | `/usuarios/{id}` |
 
 ---
 
-## Pets
+## Propriedades
 
-| Método | Endpoint | Descrição             |
-|---|---|-----------------------|
-| POST | `/pets` | Cadastra um novo pet  |
-| GET | `/pets` | Lista todos os pets   |
-| GET | `/pets/{id}` | Busca pet por ID      |
-| GET | `/pets?page=0&size=10&sort=nomePet,asc` | Busca com paginação   |
-| GET | `/pets/nome?nomePet=Thor` | Busca pets por nome   |
-| GET | `/pets/especie?especie=Cachorro` | Busca pets por espécie |
-| GET | `/pets/raca?raca=Pug` | Busca pets por raça   |
-| PUT | `/pets/{id}` | Atualiza um pet       |
-| DELETE | `/pets/{id}` | Remove um pet         |
+| Método | Endpoint                            |
+| ------ | ----------------------------------- |
+| POST   | `/propriedades`                     |
+| GET    | `/propriedades`                     |
+| GET    | `/propriedades/{id}`                |
+| GET    | `/propriedades/usuario/{idUsuario}` |
+| GET    | `/propriedades/tipo`                |
+| PUT    | `/propriedades/{id}`                |
+| DELETE | `/propriedades/{id}`                |
 
 ---
 
-## Veterinários
+## Plantações
 
-| Método | Endpoint | Descrição                              |
-|---|---|----------------------------------------|
-| POST | `/veterinarios` | Cadastra um novo veterinário           |
-| GET | `/veterinarios` | Lista todos os veterinários            |
-| GET | `/veterinarios/{id}` | Busca veterinário por ID               |
-| GET | `/veterinarios?page=0&size=10&sort=nomeUsuario,asc` | Busca veterinário com paginação        |
-| GET | `/veterinarios/especialidade?especialidade=Cirurgia` | Busca veterinários por especialidade   |
-| GET | `/veterinarios/servico?tipoServico=Consulta` | Busca veterinários por tipo de serviço |
-| PUT | `/veterinarios/{id}` | Atualiza um veterinário                |
-| DELETE | `/veterinarios/{id}` | Remove um veterinário                  |
-
----
-
-## Swagger
-
-| Recurso | Endpoint |
-|---|---|
-| Swagger UI | `/swagger-ui.html` |
+| Método | Endpoint                                  |
+| ------ | ----------------------------------------- |
+| POST   | `/plantacoes`                             |
+| GET    | `/plantacoes`                             |
+| GET    | `/plantacoes/{id}`                        |
+| GET    | `/plantacoes/propriedade/{idPropriedade}` |
+| GET    | `/plantacoes/status`                      |
+| GET    | `/plantacoes/tipo`                        |
+| PUT    | `/plantacoes/{id}`                        |
+| DELETE | `/plantacoes/{id}`                        |
 
 ---
 
-# Exemplos de Busca
+## Dados NASA
 
-## Buscar pets por nome
-
-```txt
-GET /pets/nome?nomePet=Thor
-```
-
-## Buscar veterinários por especialidade
-
-```txt
-GET /veterinarios/especialidade?especialidade=Cardiologia
-```
+| Método | Endpoint                              |
+| ------ | ------------------------------------- |
+| POST   | `/dados-nasa`                         |
+| GET    | `/dados-nasa`                         |
+| GET    | `/dados-nasa/{id}`                    |
+| GET    | `/dados-nasa/plantacao/{idPlantacao}` |
+| PUT    | `/dados-nasa/{id}`                    |
+| DELETE | `/dados-nasa/{id}`                    |
 
 ---
 
-#  Documentação da API
+## Dados IoT Clima
 
-A documentação completa da API pode ser acessada através do Swagger UI.
+| Método | Endpoint                                   |
+| ------ | ------------------------------------------ |
+| POST   | `/dados-iot-clima`                         |
+| GET    | `/dados-iot-clima`                         |
+| GET    | `/dados-iot-clima/{id}`                    |
+| GET    | `/dados-iot-clima/plantacao/{idPlantacao}` |
+| PUT    | `/dados-iot-clima/{id}`                    |
+| DELETE | `/dados-iot-clima/{id}`                    |
 
 ---
 
+## Alertas
 
-#  Disciplina
+| Método | Endpoint                           |
+| ------ | ---------------------------------- |
+| POST   | `/alertas`                         |
+| GET    | `/alertas`                         |
+| GET    | `/alertas/{id}`                    |
+| GET    | `/alertas/plantacao/{idPlantacao}` |
+| GET    | `/alertas/status`                  |
+| GET    | `/alertas/nivel`                   |
+| PUT    | `/alertas/{id}`                    |
+| DELETE | `/alertas/{id}`                    |
 
-Java Advanced — 1º e 2° Sprint Challenge
+---
 
-FIAP
+# Recursos Implementados
+
+* Spring HATEOAS
+* Paginação com `Pageable`
+* Swagger/OpenAPI
+* Bean Validation
+* Tratamento global de exceções
+* Oracle Database
+* Deploy no Render
+
+---
+
+# Documentação da API
+
+A documentação completa da API pode ser acessada através do Swagger UI disponibilizado pela aplicação.
+
+---
+
+# Disciplina
+
+**Java Advanced — Global Solution**
+
+**FIAP**
