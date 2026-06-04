@@ -1,5 +1,7 @@
 package br.com.terrasense.service;
 
+import br.com.terrasense.dto.usuario.LoginRequestDTO;
+import br.com.terrasense.dto.usuario.LoginResponseDTO;
 import br.com.terrasense.dto.usuario.UsuarioRequestDTO;
 import br.com.terrasense.dto.usuario.UsuarioResponseDTO;
 import br.com.terrasense.exception.DuplicateResourceException;
@@ -92,6 +94,18 @@ public class UsuarioService {
                 usuario.getTelefone(),
                 usuario.getEmail(),
                 usuario.getPerfilCargo()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public LoginResponseDTO login(LoginRequestDTO dto) {
+
+        Usuario usuario = usuarioRepository
+                .findByEmailAndSenha(dto.email(), dto.senha())
+                .orElseThrow(() -> new ResourceNotFoundException("E-mail ou senha inválidos."));
+
+        return new LoginResponseDTO(
+                usuario.getIdUsuario()
         );
     }
 }

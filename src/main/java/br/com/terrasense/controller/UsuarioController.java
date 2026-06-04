@@ -1,5 +1,7 @@
 package br.com.terrasense.controller;
 
+import br.com.terrasense.dto.usuario.LoginRequestDTO;
+import br.com.terrasense.dto.usuario.LoginResponseDTO;
 import br.com.terrasense.dto.usuario.UsuarioRequestDTO;
 import br.com.terrasense.dto.usuario.UsuarioResponseDTO;
 import br.com.terrasense.service.UsuarioService;
@@ -139,5 +141,21 @@ public class UsuarioController {
                         .listar(Pageable.unpaged()))
                         .withRel("usuarios")
         );
+    }
+
+    @PostMapping("/login")
+    @Operation(
+            summary = "Realizar login",
+            description = "Autentica um usuário através de e-mail e senha"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
+    public ResponseEntity<LoginResponseDTO> login(
+            @RequestBody @Valid LoginRequestDTO dto
+    ) {
+        return ResponseEntity.ok(usuarioService.login(dto));
     }
 }
