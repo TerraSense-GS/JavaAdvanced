@@ -1,6 +1,6 @@
-#  ChupinVet API
+#  TerraSense API
 
-A API ChupinVet atua como camada de comunicação entre o aplicativo mobile do projeto e o banco de dados Oracle, 
+A API TerraSense atua como camada de comunicação entre o aplicativo mobile do projeto e o banco de dados Oracle, 
 permitindo que todas as informações cadastradas no sistema sejam acessadas, 
 atualizadas e gerenciadas.
 
