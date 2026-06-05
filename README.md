@@ -180,6 +180,7 @@ https://terrasense-csjw.onrender.com/swagger-ui.html
 | Método | Endpoint         |
 | ------ | ---------------- |
 | POST   | `/usuarios`      |
+| POST   | `/usuarios/login`|
 | GET    | `/usuarios`      |
 | GET    | `/usuarios/{id}` |
 | PUT    | `/usuarios/{id}` |
