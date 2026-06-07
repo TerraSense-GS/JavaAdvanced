@@ -4,8 +4,11 @@ import br.com.terrasense.dto.usuario.LoginRequestDTO;
 import br.com.terrasense.dto.usuario.LoginResponseDTO;
 import br.com.terrasense.dto.usuario.UsuarioRequestDTO;
 import br.com.terrasense.dto.usuario.UsuarioResponseDTO;
+import br.com.terrasense.exception.ErrorResponse;
 import br.com.terrasense.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,8 +43,18 @@ public class UsuarioController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuário cadastrado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "409", description = "E-mail já cadastrado")
+            @ApiResponse(responseCode = "400", description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "409", description = "E-mail já cadastrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
     })
     public ResponseEntity<EntityModel<UsuarioResponseDTO>> cadastrar(
             @RequestBody @Valid UsuarioRequestDTO dto
@@ -84,11 +97,14 @@ public class UsuarioController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
     })
-    public ResponseEntity<EntityModel<UsuarioResponseDTO>> buscarPorId(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<EntityModel<UsuarioResponseDTO>> buscarPorId(@PathVariable Long id) {
         UsuarioResponseDTO usuario = usuarioService.buscarPorId(id);
 
         return ResponseEntity.ok(adicionarLinks(usuario));
@@ -101,9 +117,24 @@ public class UsuarioController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
-            @ApiResponse(responseCode = "409", description = "E-mail já cadastrado")
+            @ApiResponse(responseCode = "400", description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "409", description = "E-mail já cadastrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
     })
     public ResponseEntity<EntityModel<UsuarioResponseDTO>> atualizar(
             @PathVariable Long id,
@@ -120,12 +151,44 @@ public class UsuarioController {
             description = "Remove um usuário do sistema pelo ID informado"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"
+            ),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
     })
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         usuarioService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/login")
+    @Operation(
+            summary = "Realizar login",
+            description = "Autentica um usuário através de e-mail e senha"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<LoginResponseDTO> login(
+            @RequestBody @Valid LoginRequestDTO dto
+    ) {
+        return ResponseEntity.ok(usuarioService.login(dto));
     }
 
     private EntityModel<UsuarioResponseDTO> adicionarLinks(
@@ -143,19 +206,4 @@ public class UsuarioController {
         );
     }
 
-    @PostMapping("/login")
-    @Operation(
-            summary = "Realizar login",
-            description = "Autentica um usuário através de e-mail e senha"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos")
-    })
-    public ResponseEntity<LoginResponseDTO> login(
-            @RequestBody @Valid LoginRequestDTO dto
-    ) {
-        return ResponseEntity.ok(usuarioService.login(dto));
-    }
 }
