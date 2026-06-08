@@ -116,7 +116,7 @@ O projeto utiliza o Oracle Database como banco de dados relacional principal.
 * Uma plantação pode possuir vários registros de dados climáticos provenientes de sensores IoT.
 * Uma plantação pode possuir vários alertas agrícolas.
 
-## Modelagem Avançada
+## Modelagem
 
 * Relacionamentos JPA (`@OneToMany` e `@ManyToOne`)
 * Objetos utilizando `@Embedded`
@@ -262,7 +262,7 @@ https://terrasense-csjw.onrender.com/swagger-ui.html
 
 * Spring HATEOAS
 * Paginação com `Pageable`
-* Swagger/OpenAPI
+* Swagger
 * Bean Validation
 * Tratamento global de exceções
 * Oracle Database
