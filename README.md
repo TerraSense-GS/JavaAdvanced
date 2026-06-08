@@ -13,7 +13,7 @@ A utilização da API centraliza as regras de negócio da solução, garante a i
 * **Deploy:** https://terrasense-csjw.onrender.com
 * **Swagger:** https://terrasense-csjw.onrender.com/swagger-ui.html
 * **Vídeo de Apresentação:** placeholder
-* **Repositório GitHub:** placeholder
+* **Vídeo Pitch:** placeholder
 
 ---
 
@@ -130,13 +130,13 @@ O projeto utiliza o Oracle Database como banco de dados relacional principal.
 ## Clonar o Repositório
 
 ```bash
-git clone placeholder
+git clone https://github.com/TerraSense-GS/JavaAdvanced.git
 ```
 
 ## Acessar a Pasta do Projeto
 
 ```bash
-cd placeholder
+cd JavaAdvanced
 ```
 
 ## Executar a Aplicação
