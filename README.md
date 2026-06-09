@@ -129,6 +129,8 @@ O projeto utiliza o Oracle Database como banco de dados relacional principal.
 
 ## Clonar o Repositório
 
+### Os próximos passos são recomendados somente para times de desenvolvimento que conhecem como adaptar o banco de dados de acordo com o propósito da api, do contrário utilize somente o link original da api no Render.
+
 ```bash
 git clone https://github.com/TerraSense-GS/JavaAdvanced.git
 ```
