@@ -70,9 +70,7 @@ public class AlertaService {
     public AlertaResponseDTO cadastrar(AlertaRequestDTO dto) {
         Plantacao plantacao = plantacaoRepository
                 .findById(dto.idPlantacao())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Plantação não encontrada com ID: "+ dto.idPlantacao()
-                        )
+                .orElseThrow(() -> new ResourceNotFoundException("Plantação não encontrada com ID: "+ dto.idPlantacao())
                 );
 
         Alerta alerta = new Alerta();
@@ -101,10 +99,7 @@ public class AlertaService {
         Plantacao plantacao = plantacaoRepository
                 .findById(dto.idPlantacao())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Plantação não encontrada com ID: "
-                                        + dto.idPlantacao()
-                        )
+                        new ResourceNotFoundException("Plantação não encontrada com ID: " + dto.idPlantacao())
                 );
 
         alerta.setTipoAlerta(dto.tipoAlerta());

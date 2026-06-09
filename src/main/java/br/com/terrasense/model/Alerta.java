@@ -27,11 +27,7 @@ public class Alerta {
     @SequenceGenerator(name = "alerta_seq", sequenceName = "SEQ_ALERTA", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "alerta_seq")
     @Column(name = "ID_ALERTA")
-    @Schema(
-            description = "ID único do alerta",
-            example = "1",
-            accessMode = Schema.AccessMode.READ_ONLY
-    )
+    @Schema(description = "ID único do alerta", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long idAlerta;
 
     @NotBlank

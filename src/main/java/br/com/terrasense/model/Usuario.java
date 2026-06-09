@@ -27,11 +27,7 @@ public class Usuario {
     @SequenceGenerator(name = "usuario_seq", sequenceName = "SEQ_USUARIO", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
     @Column(name = "ID_USUARIO")
-    @Schema(
-            description = "ID único do usuário",
-            example = "1",
-            accessMode = Schema.AccessMode.READ_ONLY
-    )
+    @Schema(description = "ID único do usuário", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long idUsuario;
 
     @NotBlank
