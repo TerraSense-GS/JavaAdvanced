@@ -12,7 +12,7 @@ A utilização da API centraliza as regras de negócio da solução, garante a i
 
 * **Deploy:** https://terrasense-csjw.onrender.com
 * **Swagger:** https://terrasense-csjw.onrender.com/swagger-ui.html
-* **Vídeo de Apresentação:** placeholder
+* **Vídeo de Apresentação:** https://youtu.be/HvhJ3Zc9RrU
 * **Vídeo Pitch:** placeholder
 
 ---
